@@ -3,7 +3,7 @@ let Recipe = require('../models/recipe.model');
 
 // Get All Recipes 
 router.get('/recipe-list', (req, res) => {
-    Recipe.find().sort({dateCreated: -1}).then(recipes => res.json(recipes)).catch(err => res.status(400).json('Error: ' + err))
+    Recipe.find().sort({recipeId: -1}).then(recipes => res.json(recipes)).catch(err => res.status(400).json('Error: ' + err))
 });
 
 // Get Filtered Recipes
@@ -15,9 +15,9 @@ router.get('/list/:filter?', (req, res) => {
 
 // Add Recipe
 router.post('/add', (req, res) => {
-    const { title, description, dish, ingredients, procedures, editDate, dateCreated } = req.body;
+    const { title, description, dish, ingredients, procedures, editDate, dateCreated, recipeId } = req.body;
     const newRecipe = new Recipe({
-        title, description, dish, ingredients, procedures, editDate, dateCreated
+        title, description, dish, ingredients, procedures, editDate, dateCreated, recipeId
     });
 
     newRecipe.save()
@@ -29,34 +29,26 @@ router.post('/add', (req, res) => {
 router.get('/view/:id', (req, res) => {
   Recipe.findById(req.params.id)
     .then(recipe => res.json(recipe))
-    .catch(err => res.status(400).send({error: true}));
+    .catch(err => {
+        return res.status(400).send({error: true, msg: 'Unable to Find Recipe'})
+    });
 });
 
 // Delete Recipe
 router.delete('/:id', (req,res) => {
     Recipe.findByIdAndDelete(req.params.id)
         .then(() => res.send({msg: 'Recipe Deleted'}))
-        .catch((err) => res.status(400).send('Unable to Delete'))
+        .catch((err) => res.status(400).send({msg: 'Unable to Delete'}))
 })
 
 // Edit Recipe
 router.post('/update/:id', (req,res) => {
     const { title, description, dish, ingredients, procedures, editDate } = req.body;
 
-    Recipe.findById(req.params.id)
-        .then(recipe => {
-            recipe.title = title,
-            recipe.description = description,
-            recipe.dish = dish,
-            recipe.ingredients = ingredients,
-            recipe.procedures = procedures,
-            recipe.editDate = editDate
-
-            recipe.save()
-                .then(() => res.send({msg: 'Recipe Updated!'}))
-                .catch(err => res.status(400).json('Error: ' + err));
-        })
-        .catch(err => res.status(400).json('Error: ' + err));
+    Recipe.findByIdAndUpdate(req.params.id, {
+        title, description, dish, ingredients, procedures, editDate
+    }).then(() => res.send({msg: 'Recipe Updated!'}))
+    .catch(err => res.status(400).send({msg: 'Unable to Find Recipe'}));
 });
 
 module.exports = router;

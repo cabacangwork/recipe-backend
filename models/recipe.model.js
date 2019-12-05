@@ -25,15 +25,15 @@ const recipeSchema = new Schema({
   },
   dateCreated: { 
     type: String, 
-    required: false 
+    required: true 
   },
   editDate: { 
     type: String, 
-    required: false 
+    required: true 
   },
-  userId: {
+  recipeId: {
     type: String,
-    required: false
+    required: true
   },
 });
 
