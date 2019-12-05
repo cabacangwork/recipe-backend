@@ -3,7 +3,7 @@ let Recipe = require('../models/recipe.model');
 
 // Get All Recipes 
 router.get('/recipe-list', (req, res) => {
-    Recipe.find().then(recipes => res.json(recipes)).catch(err => res.status(400).json('Error: ' + err))
+    Recipe.find().sort({dateCreated: -1}).then(recipes => res.json(recipes)).catch(err => res.status(400).json('Error: ' + err))
 });
 
 // Get Filtered Recipes
