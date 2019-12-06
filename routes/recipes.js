@@ -22,7 +22,7 @@ router.post('/add', (req, res) => {
 
     newRecipe.save()
         .then(() => res.send({msg: 'Recipe Added!'}))
-        .catch((err) => res.status(400).send('Unable to Save New Recipe'))
+        .catch((err) => res.status(400).send({msg: 'Unable to Save New Recipe!', error: true}))
 });
 
 // Get Recipe Details
