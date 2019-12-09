@@ -9,7 +9,7 @@ app.use(express.json());
 
 const uri = ('mongodb+srv://recipeDB:Passw0rd3@cluster0-h1g1p.mongodb.net/test?retryWrites=true&w=majority')
 
-mongoose.connect(uri, { useFindAndModify: false });
+mongoose.connect(uri, { useFindAndModify: false, useNewUrlParser: true, useUnifiedTopology: true });
 
 const connection = mongoose.connection;
 
@@ -17,4 +17,4 @@ connection.once('open', () => console.log('MongoDB connection established succes
 
 app.use('/recipes', require('./routes/recipes'));
 
-app.listen(5000, () => console.log('Server is running on port: 5000'));
+app.listen(3000, () => console.log('Server is running on port: 3000'));
