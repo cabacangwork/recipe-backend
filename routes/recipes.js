@@ -12,7 +12,9 @@ router.get('/recipe-list', (req, res) => {
 router.get('/list/:filter?', (req, res) => {
     (req.query.filter === 'all')? 
       ( Recipe.find().then(recipes => res.json(recipes)).catch(err => res.status(400).json('Error: ' + err))):
-      Recipe.find({dish: req.query.filter}).then(recipes => res.json(recipes)).catch(err => res.status(400).json('Error: ' + err))
+      Recipe.find({dish: req.query.filter})
+        .then(recipes => res.json(recipes))
+        .catch(err => res.status(400).json('Error: ' + err))
 });
 
 // Add Recipe
@@ -35,15 +37,15 @@ router.post('/add', (req, res) => {
 // Get Recipe Details
 router.get('/view/:id', (req, res) => {
   Recipe.findById(req.params.id)
-    .then(recipe => res.json({recipe, success: true}))
-    .catch(err => res.status(400).send({success: false, msg: 'Unable to Find Recipe'}));
+    .then(recipe => res.json({recipe}))
+    .catch(err => res.status(400).json('Error: ' + err));
 });
 
 // Delete Recipe
 router.delete('/:id', (req,res) => {
     Recipe.findByIdAndDelete(req.params.id)
         .then(() => res.send({msg: 'Recipe Deleted'}))
-        .catch(err => res.status(400).send({msg: 'Unable to Delete', error: true}))
+        .catch(err => res.status(400).json('Error: ' + err));
 })
 
 // Edit Recipe
